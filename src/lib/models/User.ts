@@ -36,9 +36,8 @@ adminSchema.methods.matchPassword = async function (enteredPassword: string) {
 };
 
 // Hash password
-adminSchema.pre('save', async function (next) {
+adminSchema.pre('save', async function () {
   if (!this.isModified('password')) {
-    next();
     return;
   }
 

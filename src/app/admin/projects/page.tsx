@@ -47,11 +47,11 @@ function AdminProjectCard({ item, onEdit, onDelete }: { item: any, onEdit: (item
           <div className="w-10 h-10 bg-white/[0.03] rounded-xl flex items-center justify-center text-sm border border-white/[0.05] group-hover:bg-orange-500/10 group-hover:border-orange-500/30 transition-all">
             {item.featured ? '✦' : '↳'}
           </div>
-          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onClick={() => onEdit(item)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.02] text-orange-500 hover:bg-orange-500/10 border border-white/[0.05] transition-all">
+          <div className="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+            <button onClick={() => onEdit(item)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.05] md:bg-white/[0.02] text-orange-500 hover:bg-orange-500/10 border border-white/[0.05] transition-all">
                <span className="text-[10px] font-black uppercase tracking-widest">Edit</span>
             </button>
-            <button onClick={() => onDelete(item._id)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-destructive/5 text-destructive hover:bg-destructive/10 border border-destructive/10 transition-all">
+            <button onClick={() => onDelete(item._id)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-destructive/10 md:bg-destructive/5 text-destructive hover:bg-destructive/10 border border-destructive/10 transition-all">
                <span className="text-[10px] font-black uppercase tracking-widest">Del</span>
             </button>
           </div>

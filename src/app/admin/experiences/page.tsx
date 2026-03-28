@@ -103,48 +103,50 @@ export default function AdminExperiences() {
         <Button onClick={openAdd} className="h-10 rounded-xl px-6 font-black uppercase tracking-widest text-[9px]">Add Landmark</Button>
       </div>
 
-      <div className="w-full border border-orange-500/10 rounded-2xl overflow-hidden glass-card">
-        <table className="w-full text-left text-xs min-w-[600px]">
-          <thead className="text-[9px] font-black uppercase tracking-[0.15em] text-orange-500/60 bg-orange-500/5">
-            <tr>
-              <th className="p-4 px-6">Position</th>
-              <th className="p-4 px-6">Organization</th>
-              <th className="p-4 px-6">Period</th>
-              <th className="p-4 px-6 text-right">Operations</th>
-            </tr>
-          </thead>
-          <tbody className="font-medium text-foreground/80">
-            {loading ? (
-              [1, 2, 3].map(i => (
-                <tr key={i} className="animate-pulse">
-                  <td colSpan={4} className="p-4 px-6"><div className="h-10 bg-orange-500/5 rounded-xl" /></td>
-                </tr>
-              ))
-            ) : items.length === 0 ? (
+      <div className="w-full border border-orange-500/10 rounded-2xl glass-card relative">
+        <div className="overflow-x-auto hide-scrollbar w-full pb-2">
+          <table className="w-full text-left text-xs min-w-[600px]">
+            <thead className="text-[9px] font-black uppercase tracking-[0.15em] text-orange-500/60 bg-orange-500/5">
               <tr>
-                <td colSpan={4} className="p-16 text-center text-muted-foreground">
-                  <div className="text-4xl mb-4 opacity-20">💼</div>
-                  <p className="text-lg font-black uppercase tracking-tight opacity-40">Timeline Empty</p>
-                  <p className="text-[9px] uppercase tracking-widest mt-1">No professional records found</p>
-                </td>
+                <th className="p-4 px-6">Position</th>
+                <th className="p-4 px-6">Organization</th>
+                <th className="p-4 px-6">Period</th>
+                <th className="p-4 px-6 text-right">Operations</th>
               </tr>
-            ) : items.map((item: any) => (
-              <tr key={item._id} className="border-t border-orange-500/5 hover:bg-orange-500/5 transition-all duration-300">
-                <td className="p-4 px-6 font-black uppercase tracking-tight text-foreground text-[13px]">{item.role}</td>
-                <td className="p-4 px-6 text-orange-500 font-bold text-[13px]">{item.company}</td>
-                <td className="p-4 px-6">
-                  <span className="px-2.5 py-0.5 bg-orange-500/5 text-primary rounded-full text-[9px] font-black border border-orange-500/10 uppercase tracking-widest">
-                    {item.duration}
-                  </span>
-                </td>
-                <td className="p-4 px-6 text-right space-x-3">
-                  <button onClick={() => openEdit(item)} className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-foreground transition-colors">Edit</button>
-                  <button onClick={() => handleDelete(item._id)} className="text-[9px] font-black uppercase tracking-widest text-destructive hover:scale-105 transition-transform">Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="font-medium text-foreground/80">
+              {loading ? (
+                [1, 2, 3].map(i => (
+                  <tr key={i} className="animate-pulse">
+                    <td colSpan={4} className="p-4 px-6"><div className="h-10 bg-orange-500/5 rounded-xl" /></td>
+                  </tr>
+                ))
+              ) : items.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-16 text-center text-muted-foreground">
+                    <div className="text-4xl mb-4 opacity-20">💼</div>
+                    <p className="text-lg font-black uppercase tracking-tight opacity-40">Timeline Empty</p>
+                    <p className="text-[9px] uppercase tracking-widest mt-1">No professional records found</p>
+                  </td>
+                </tr>
+              ) : items.map((item: any) => (
+                <tr key={item._id} className="border-t border-orange-500/5 hover:bg-orange-500/5 transition-all duration-300 group">
+                  <td className="p-4 px-6 font-black uppercase tracking-tight text-foreground text-[13px]">{item.role}</td>
+                  <td className="p-4 px-6 text-orange-500 font-bold text-[13px]">{item.company}</td>
+                  <td className="p-4 px-6">
+                    <span className="px-2.5 py-0.5 bg-orange-500/5 text-primary rounded-full text-[9px] font-black border border-orange-500/10 uppercase tracking-widest whitespace-nowrap">
+                      {item.duration}
+                    </span>
+                  </td>
+                  <td className="p-4 px-6 text-right space-x-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all">
+                    <button onClick={() => openEdit(item)} className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors bg-white/5 md:bg-transparent px-3 py-1.5 rounded-lg border border-white/5 md:border-none">Edit</button>
+                    <button onClick={() => handleDelete(item._id)} className="text-[9px] font-black uppercase tracking-widest text-destructive hover:scale-105 transition-transform bg-destructive/10 md:bg-transparent px-3 py-1.5 rounded-lg border border-destructive/10 md:border-none">Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <AnimatePresence>

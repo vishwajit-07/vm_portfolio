@@ -131,9 +131,9 @@ export default function AdminSkills() {
                   <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5">{item.level}% Proficiency</p>
                 </div>
               </div>
-              <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => openEdit(item)} className="p-1.5 hover:bg-orange-500/10 rounded-lg text-primary transition-colors text-xs">✏️</button>
-                <button onClick={() => handleDelete(item._id)} className="p-1.5 hover:bg-destructive/10 rounded-lg text-destructive transition-colors text-xs">🗑️</button>
+              <div className="flex gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                <button onClick={() => openEdit(item)} className="p-1.5 bg-orange-500/10 md:bg-transparent hover:bg-orange-500/10 rounded-lg text-primary transition-colors text-xs">✏️</button>
+                <button onClick={() => handleDelete(item._id)} className="p-1.5 bg-destructive/10 md:bg-transparent hover:bg-destructive/10 rounded-lg text-destructive transition-colors text-xs">🗑️</button>
               </div>
             </div>
             <div className="h-1.5 rounded-full bg-orange-500/5 overflow-hidden border border-orange-500/5">

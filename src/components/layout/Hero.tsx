@@ -12,13 +12,16 @@ import axios from 'axios';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import WordMorph from '@/components/animations/WordMorph';
+import Link from 'next/link';
+import { Github, Linkedin } from 'lucide-react';
 
 
 
 const ROLES = [
-  'Full-Stack Engineer',
-  'MERN Developer',
-  'React & UI Engineer',
+  'FullStack Developer',
+  'ReactJs Developer',
+  'NodeJs Developer',
+  'UI Developer',
 ];
 
 export default function Hero() {
@@ -94,15 +97,15 @@ export default function Hero() {
               style={{ x, y }}
               className="flex-1 text-center md:text-left space-y-6 md:space-y-8"
             >
-              <span className="inline-flex px-2 py-0.5 rounded-full bg-orange-500/5 border border-orange-500/10 text-[9px] font-black text-orange-400 uppercase tracking-[0.2em]">
-                {profile?.name ? `HI, I'M ${profile.name}` : 'WELCOME'}
+              <span className="inline-flex px-4 py-1.5 rounded-full bg-[linear-gradient(90deg,rgba(249,115,22,0.1)_0%,rgba(249,115,22,0)_100%)] border-l-2 border-orange-500 text-sm md:text-base font-bold text-orange-400 tracking-widest pl-4">
+                Hi, I am Vishwajit Mavalankar
               </span>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
                 Building digital products <br className="hidden md:block" />
                 as a{' '}
                 <span className="inline-flex min-w-[200px] md:min-w-[300px] text-left">
-                  <WordMorph words={profile?.title ? profile.title.split(',').map((r: string) => r.trim()) : ROLES} />
+                  <WordMorph words={ROLES} />
                 </span>
               </h1>
 
@@ -110,13 +113,35 @@ export default function Hero() {
                 {profile?.bio}
               </p>
 
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <Button className="bg-orange-500 text-white px-6 h-10 text-xs font-bold">
-                  Manifest
+              <div className="flex flex-wrap gap-4 items-center justify-center md:justify-start mt-4">
+                <Button 
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} 
+                  variant="outline" 
+                  className="bg-orange-500/10 border-orange-500/50 text-orange-400 px-8 h-11 rounded-full text-xs font-bold hover:bg-orange-500/20 hover:scale-105 hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] transition-all duration-300"
+                >
+                  Contact
                 </Button>
-                <Button variant="outline" className="border-white/10 px-6 h-10 text-xs">
-                  Connect
-                </Button>
+
+                <div className="flex gap-3 sm:ml-4">
+                  <Link href="https://github.com/vishwajit-07" target="_blank">
+                    <motion.div
+                      whileHover={{ scale: 1.15, rotate: 5 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2.5 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-orange-400/50 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    >
+                      <Github size={18} />
+                    </motion.div>
+                  </Link>
+                  <Link href="https://www.linkedin.com/in/vishwajit-mavalankar-406206240/" target="_blank">
+                    <motion.div
+                      whileHover={{ scale: 1.15, rotate: -5 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2.5 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/20 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    >
+                      <Linkedin size={18} />
+                    </motion.div>
+                  </Link>
+                </div>
               </div>
             </motion.div>
 

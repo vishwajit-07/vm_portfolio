@@ -346,8 +346,9 @@ export default function Projects() {
         </motion.div>
       </div>
 
+      {/* 💻 DESKTOP ORBITAL CAROUSEL */}
       <div
-        className="relative h-[500px] w-full max-w-7xl mx-auto flex items-center"
+        className="relative h-[500px] w-full max-w-7xl mx-auto hidden md:flex items-center"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -391,8 +392,37 @@ export default function Projects() {
         )}
       </div>
 
+      {/* 📱 MOBILE HORIZONTAL SCROLL CAROUSEL */}
+      <div className="md:hidden w-full flex overflow-x-auto snap-x snap-mandatory gap-4 -mx-6 px-6 hide-scrollbar pb-6 pt-4">
+        {items.map((proj, i) => (
+          <div key={proj._id || i} className="snap-center shrink-0 w-[260px] cursor-pointer rounded-[1.5rem] premium-glass border border-white/10 p-5 flex flex-col relative overflow-hidden transition-all hover:border-orange-500/30" onClick={() => setSelectedProject(proj)}>
+            <div className="absolute inset-0 z-0">
+              <img src={proj.images?.[0] || 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop&q=60'} alt={proj.title} className="w-full h-full object-cover opacity-20 grayscale transition-all duration-500 hover:grayscale-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/80 to-[#0B0B0F]/40" />
+            </div>
+            
+            <div className="relative z-10 flex flex-col h-[280px]">
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-8 h-8 rounded-xl bg-orange-500/20 border border-orange-500/50 text-orange-400 flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                  {proj.featured ? <Star className="w-3 h-3 fill-current" /> : <div className="w-1.5 h-1.5 rounded-full bg-current" />}
+                </div>
+              </div>
+              <h3 className="font-bold tracking-tight text-white/90 text-lg mb-2 leading-tight">{proj.title}</h3>
+              <p className="text-[10px] text-white/50 leading-relaxed font-medium line-clamp-3 mb-4">{proj.description}</p>
+              <div className="flex flex-wrap gap-1.5 mt-auto">
+                {(proj.techStack || []).slice(0, 3).map((t: string) => (
+                  <span key={t} className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest bg-white/[0.05] text-white/50 border border-white/[0.05]">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {!loading && items.length > 0 && (
-        <div className="mt-12 flex flex-col items-center gap-6 relative z-10 font-bold group">
+        <div className="mt-12 hidden md:flex flex-col items-center gap-6 relative z-10 font-bold group">
           <div className="flex gap-3 p-2 rounded-2xl bg-white/[0.03] border border-white/[0.05] backdrop-blur-xl">
             {items.map((_, i) => (
               <button

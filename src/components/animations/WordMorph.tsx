@@ -1,65 +1,54 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 interface WordMorphProps {
   words: string[];
-  interval?: number;
 }
 
-export default function WordMorph({ words, interval = 4000 }: WordMorphProps) {
-  const [index, setIndex] = useState(0);
+export default function WordMorph({ words }: WordMorphProps) {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % words.length);
-    }, interval);
-    return () => clearInterval(timer);
-  }, [words.length, interval]);
+    if (!words || words.length === 0) return;
 
-  const currentWord = words[index];
+    const currentWord = words[currentWordIndex];
 
+    const handleType = () => {
+      if (!isDeleting) {
+        setCurrentText(currentWord.substring(0, currentText.length + 1));
+
+        if (currentText === currentWord) {
+          if (words.length > 1) {
+            setTimeout(() => setIsDeleting(true), 1000); // Wait after typing before deleting
+          }
+        }
+      } else {
+        setCurrentText(currentWord.substring(0, currentText.length - 1));
+
+        if (currentText === '') {
+          setIsDeleting(false);
+          setCurrentWordIndex((prev) => (prev + 1) % words.length);
+        }
+      }
+    };
+
+    const typeSpeed = isDeleting ? 40 : 100; // Type slower, delete faster
+    const delay = currentText === currentWord && !isDeleting ? 2500 : typeSpeed;
+
+    const timer = setTimeout(handleType, delay);
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, currentWordIndex, words]);
+
+  // Prevent hydration jitter by ensuring we at least have a space or the first char
   return (
-    <div className="relative inline-flex items-center py-2 h-[1.5em]">
-      <AnimatePresence mode="popLayout">
-        <motion.div
-          key={currentWord}
-          className="flex"
-        >
-          {currentWord.split('').map((char, i) => (
-            <motion.span
-              key={`${currentWord}-${i}`}
-              initial={{ opacity: 0, y: 15, filter: 'blur(10px)', scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }}
-              exit={{ opacity: 0, y: -15, filter: 'blur(10px)', scale: 0.8 }}
-              transition={{
-                duration: 0.8,
-                delay: i * 0.04,
-                ease: [0.6, 0.01, -0.05, 0.95], // Premium fluid easing
-              }}
-              className="inline-block bg-gradient-to-r from-orange-400 via-orange-200 to-orange-500 bg-clip-text text-transparent font-bold whitespace-nowrap"
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </motion.div>
-      </AnimatePresence>
-      
-      {/* Cinematic Breathing Cursor */}
-      <motion.div
-        animate={{ 
-          opacity: [0.1, 0.5, 0.1],
-          height: ['1.1em', '1.3em', '1.1em'],
-          scaleY: [0.9, 1.1, 0.9]
-        }}
-        transition={{ 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-        className="ml-2 w-[4px] bg-orange-500/40 rounded-full blur-[1px] shadow-[0_0_15px_rgba(249,115,22,0.6)] h-[1.2em]"
-      />
-    </div>
+    <span className="inline-flex items-center">
+      <span className="bg-gradient-to-r from-orange-400 via-orange-200 to-orange-500 bg-clip-text text-transparent font-bold min-h-[1.5em] leading-normal">
+        {currentText || '\u00A0'}
+      </span>
+      <span className="ml-[2px] w-[3px] h-[1.1em] bg-orange-500/80 animate-[pulse_1s_cubic-bezier(0.4,0,0.6,1)_infinite] shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
+    </span>
   );
 }

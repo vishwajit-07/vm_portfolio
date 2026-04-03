@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  AnimatePresence,
-} from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
@@ -14,9 +8,7 @@ import { Button } from '@/components/ui/Button';
 import WordMorph from '@/components/animations/WordMorph';
 import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
-import FadeIn from '@/components/animations/FadeIn';
-import StaggerContainer from '@/components/animations/StaggerContainer';
-import { LazyMotion, domMax } from 'framer-motion';
+
 
 
 

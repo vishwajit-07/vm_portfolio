@@ -1,14 +1,12 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-
+import { TimelineContainer, TimelineItem } from '@/components/ui/Timeline';
 
 export default function Experience() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPortfolio = async () => {
@@ -75,7 +73,7 @@ export default function Experience() {
             ))}
           </div>
         ) : (
-          <div className="space-y-6">
+          <TimelineContainer>
             {items.map((exp, i) => {
               const bullets = exp.description
                 ? exp.description
@@ -84,79 +82,33 @@ export default function Experience() {
                   .filter((s: string) => s.length > 0)
                 : [];
 
+              // Calculate pseudo startDate from duration matching "Jun 2025 - Present"
+              let startDate;
+              const isCurrent = exp.duration?.toLowerCase().includes('present');
+              if (isCurrent && exp.duration) {
+                const parts = exp.duration.split('-');
+                if (parts.length > 0) {
+                  startDate = parts[0].trim();
+                }
+              }
+
               return (
-                <motion.div
+                <TimelineItem
                   key={exp._id || i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: i * 0.1,
-                    ease: [0.16, 1, 0.3, 1] as any
-                  }}
-                  className="group relative"
-                >
-                  <div className="relative premium-glass p-5 md:p-7 rounded-2xl border border-white/[0.05] group-hover:border-orange-500/20 transition-all duration-500 overflow-hidden">
-
-                    {/* Background Number */}
-                    <div className="absolute top-4 right-6 text-6xl font-black text-white/[0.01] select-none pointer-events-none group-hover:text-orange-500/[0.02] transition-colors duration-500">
-                      0{i + 1}
-                    </div>
-
-                    <div className="relative z-10 space-y-5">
-                      {/* Header */}
-                      <div className="space-y-3">
-                        <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
-                          <h3 className="text-lg md:text-xl font-bold text-white tracking-tight group-hover:text-orange-500 transition-colors duration-300">
-                            {exp.role}
-                          </h3>
-
-                          {/* 🔥 Updated Duration */}
-                          <div className="flex items-center gap-3 text-white font-extrabold text-[11px] md:text-xs uppercase tracking-wider whitespace-nowrap bg-white/[0.04] px-2 py-1 rounded-md border border-white/[0.06] transition-all duration-300 group-hover:text-orange-500 group-hover:border-orange-500/30 group-hover:bg-orange-500/10">
-                            {exp.duration}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <div className="px-2 py-0.5 rounded bg-orange-500/10 border border-orange-500/20">
-                            <span className="text-orange-500 font-bold text-[9px] uppercase tracking-widest">
-                              {exp.company}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bullets */}
-                      <div className="max-w-4xl">
-                        {bullets.length > 0 ? (
-                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                            {bullets.map((bullet: string, idx: number) => (
-                              <motion.li
-                                key={idx}
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                transition={{ delay: 0.1 + idx * 0.03 }}
-                                className="flex items-start gap-3 text-white/60 text-[12px] md:text-[13px] font-medium leading-relaxed min-h-[20px]"
-                              >
-                                {/* 🔥 Better Dot Alignment */}
-                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-orange-500/40 group-hover:bg-orange-500 transition-colors shrink-0" />
-                                <span>{bullet}</span>
-                              </motion.li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className="text-white/50 text-[12px] md:text-[13px] font-medium leading-relaxed italic">
-                            {exp.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+                  index={i}
+                  position={i % 2 === 0 ? 'left' : 'right'}
+                  title={exp.role}
+                  subtitle={exp.company}
+                  duration={exp.duration}
+                  description={bullets.length === 0 ? exp.description : undefined}
+                  itemsList={bullets.length > 0 ? bullets : undefined}
+                  tags={exp.skills}
+                  startDate={startDate}
+                  iconLetter={exp.company ? exp.company.charAt(0) : "E"}
+                />
               );
             })}
-          </div>
+          </TimelineContainer>
         )}
       </div>
     </section>

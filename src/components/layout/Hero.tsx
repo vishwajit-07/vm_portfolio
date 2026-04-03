@@ -14,6 +14,9 @@ import { Button } from '@/components/ui/Button';
 import WordMorph from '@/components/animations/WordMorph';
 import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
+import FadeIn from '@/components/animations/FadeIn';
+import StaggerContainer from '@/components/animations/StaggerContainer';
+import { LazyMotion, domMax } from 'framer-motion';
 
 
 

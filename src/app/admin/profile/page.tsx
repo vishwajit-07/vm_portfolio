@@ -29,6 +29,10 @@ export default function AdminProfile() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Resume upload
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const resumeInputRef = useRef<HTMLInputElement>(null);
+
   const fetchData = async () => {
     try {
       const { data } = await axios.get(`/api/portfolio`);
@@ -59,16 +63,23 @@ export default function AdminProfile() {
     setImagePreview(URL.createObjectURL(file));
   };
 
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setResumeFile(file);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true); setSuccess(''); setError('');
     try {
       let profileImageUrl = portfolio?.profileImage;
+      let resumeUrl = portfolio?.resumeUrl;
 
       // 1. Handle image upload if a new file is selected
       if (imageFile) {
         const formData = new FormData();
-        formData.append('image', imageFile);
+        formData.append('file', imageFile);
         const { data: uploadPath } = await axios.post(`/api/upload`, formData, {
           withCredentials: true,
           headers: { 
@@ -79,13 +90,28 @@ export default function AdminProfile() {
         profileImageUrl = uploadPath;
       }
 
-      // 2. Prepare unified payload
+      // 2. Handle resume upload if a new file is selected
+      if (resumeFile) {
+        const formData = new FormData();
+        formData.append('file', resumeFile);
+        const { data: uploadPath } = await axios.post(`/api/upload`, formData, {
+          withCredentials: true,
+          headers: { 
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('adminToken')}`
+          },
+        });
+        resumeUrl = uploadPath;
+      }
+
+      // 3. Prepare unified payload
       const payload = {
         ...portfolio,
         name,
         title,
-        bio,
+        bio: bio.trim(),
         profileImage: profileImageUrl,
+        resumeUrl: resumeUrl,
         contact: {
           email,
           phone,
@@ -103,6 +129,7 @@ export default function AdminProfile() {
 
       setSuccess('Portfolio identity updated successfully!');
       setImageFile(null);
+      setResumeFile(null);
       fetchData();
     } catch (e: any) {
       setError(e.response?.data?.message || 'Failed to update portfolio');
@@ -157,6 +184,38 @@ export default function AdminProfile() {
               <Button type="button" variant="outline" className="h-9 rounded-lg border-orange-500/10 hover:bg-orange-500/5 text-[9px] px-6" onClick={() => fileInputRef.current?.click()}>
                 {imageFile ? `Selected: ${imageFile.name.substring(0, 15)}...` : 'Select New Image'}
               </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Resume Section */}
+        <div className="glass-card p-6 rounded-2xl border border-orange-500/10 overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/5 blur-3xl rounded-full -mr-12 -mt-12" />
+          <h2 className="font-black text-[9px] uppercase tracking-[0.15em] text-orange-500 mb-6 flex items-center gap-2">
+            <span className="w-6 h-px bg-orange-500/30" /> Document Repository
+          </h2>
+          
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-1 space-y-3">
+              <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed">
+                Upload your latest resume (PDF format recommended). Current: {portfolio?.resumeUrl ? <a href={portfolio.resumeUrl} target="_blank" className="text-orange-500 underline ml-1 font-bold italic">View Current</a> : <span className="text-destructive">No resume uploaded</span>}
+              </p>
+              <input ref={resumeInputRef} type="file" accept=".pdf,.doc,.docx" onChange={handleResumeChange} className="hidden" />
+              <div className="flex gap-4">
+                <Button type="button" variant="outline" className="h-9 rounded-lg border-orange-500/10 hover:bg-orange-500/5 text-[9px] px-6" onClick={() => resumeInputRef.current?.click()}>
+                  {resumeFile ? `Selected: ${resumeFile.name.substring(0, 25)}...` : 'Select Resume File'}
+                </Button>
+                {portfolio?.resumeUrl && (
+                  <Button type="button" variant="outline" className="h-9 rounded-lg border-red-500/10 hover:bg-red-500/5 text-[9px] px-6 text-red-500" onClick={() => {
+                    if (confirm('Are you sure you want to remove the resume?')) {
+                      // We'll just clear the URL in the payload
+                      setPortfolio({...portfolio, resumeUrl: ''});
+                    }
+                  }}>
+                    Remove
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>

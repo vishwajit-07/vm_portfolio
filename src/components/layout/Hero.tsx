@@ -74,7 +74,7 @@ export default function Hero({ profile }: HeroProps) {
               Hi, I am Vishwajit Mavalankar
             </span>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-tight">
               Building digital products <br className="hidden md:block" />
               as a{' '}
               <span className="inline-flex min-w-[200px] md:min-w-[300px] text-left">
@@ -82,7 +82,7 @@ export default function Hero({ profile }: HeroProps) {
               </span>
             </h1>
 
-            <p className="text-sm md:text-base text-gray-400 max-w-lg mx-auto md:mx-0">
+            <p className="text-sm md:text-base text-foreground/50 max-w-lg mx-auto md:mx-0">
               {profile?.bio || 'Creative full-stack developer building premium digital experiences.'}
             </p>
 
@@ -95,12 +95,23 @@ export default function Hero({ profile }: HeroProps) {
                 Contact
               </Button>
 
+              {profile?.resumeUrl && (
+                <Link href={profile.resumeUrl} target="_blank" download>
+                  <Button
+                    variant="outline"
+                    className="border-border text-foreground/70 px-8 h-11 rounded-full text-xs font-bold hover:bg-card hover:text-foreground transition-all duration-300"
+                  >
+                    Resume
+                  </Button>
+                </Link>
+              )}
+
               <div className="flex gap-3 sm:ml-4">
                 <Link href="https://github.com/vishwajit-07" target="_blank">
                   <motion.div
                     whileHover={{ scale: 1.15, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
-                    className="p-2.5 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-orange-400/50 hover:bg-orange-500/20 hover:shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    className="p-2.5 rounded-full bg-card border border-border text-foreground/40 hover:text-orange-500 hover:border-orange-400/50 hover:bg-orange-500/10 hover:shadow-premium transition-all duration-300 flex items-center justify-center cursor-pointer"
                   >
                     <Github size={18} />
                   </motion.div>
@@ -109,7 +120,7 @@ export default function Hero({ profile }: HeroProps) {
                   <motion.div
                     whileHover={{ scale: 1.15, rotate: -5 }}
                     whileTap={{ scale: 0.9 }}
-                    className="p-2.5 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-blue-500/50 hover:bg-blue-500/20 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    className="p-2.5 rounded-full bg-card border border-border text-foreground/40 hover:text-blue-500 hover:border-blue-500/50 hover:bg-blue-500/10 hover:shadow-premium transition-all duration-300 flex items-center justify-center cursor-pointer"
                   >
                     <Linkedin size={18} />
                   </motion.div>
@@ -193,7 +204,7 @@ export default function Hero({ profile }: HeroProps) {
                         <span className="text-orange-400 text-xs">
                           {skill.icon || '⚡'}
                         </span>
-                        <span className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                        <span className="text-foreground text-[10px] font-semibold uppercase tracking-wider">
                           {skill.name}
                         </span>
                       </motion.div>
@@ -213,7 +224,7 @@ export default function Hero({ profile }: HeroProps) {
                     text-center px-2 py-2 rounded-lg
                     bg-gradient-to-r from-orange-500/10 to-orange-400/10
                     border border-orange-400/20
-                    text-[9px] text-white font-semibold
+                    text-[9px] text-foreground font-semibold
                     shadow-[0_0_15px_rgba(249,115,22,0.15)]
                   "
                 >

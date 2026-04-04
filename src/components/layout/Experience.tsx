@@ -18,7 +18,7 @@ export default function Experience({ items }: ExperienceProps) {
   };
 
   return (
-    <section id="experience" className="relative py-20 px-6 overflow-hidden border-t border-white/[0.04]">
+    <section id="experience" className="relative py-20 px-6 overflow-hidden border-t border-border-subtle">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-orange-500/[0.02] blur-[150px] rounded-full" />
@@ -40,11 +40,11 @@ export default function Experience({ items }: ExperienceProps) {
             </span>
           </div>
 
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-white leading-none">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-foreground leading-none">
             Corporate <span className="text-gradient-primary">Trajectory</span>
           </h2>
 
-          <p className="text-white/40 font-medium text-[13px] md:text-sm max-w-lg leading-relaxed mx-auto md:mx-0">
+          <p className="text-foreground/40 font-medium text-[13px] md:text-sm max-w-lg leading-relaxed mx-auto md:mx-0">
             Technical contributions and architectural problem-solving in high-impact environments.
           </p>
         </motion.div>
@@ -54,7 +54,7 @@ export default function Experience({ items }: ExperienceProps) {
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="h-32 rounded-2xl bg-white/[0.02] border border-white/[0.05] animate-pulse"
+                className="h-32 rounded-2xl bg-card border border-border-subtle animate-pulse"
               />
             ))}
           </div>

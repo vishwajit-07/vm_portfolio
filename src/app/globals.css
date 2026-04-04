@@ -20,8 +20,6 @@ textarea,
   color: #fff;
 }
 
-@variant dark (&:is(.dark *));
-
 @theme {
   --font-display: var(--font-inter), ui-sans-serif, system-ui;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui;
@@ -33,6 +31,7 @@ textarea,
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-ring: var(--ring);
 }
 
@@ -41,11 +40,12 @@ textarea,
   --foreground: #F8F9FB;
   --card: rgba(255, 255, 255, 0.02);
   --card-foreground: #F8F9FB;
-  --primary: #f97316;
-  --primary-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.03);
   --ring: #f97316;
   --radius: 12px;
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
 }
 
 @layer base {
@@ -87,22 +87,28 @@ textarea,
 
 @layer utilities {
   .glass-header {
-    @apply bg-[#0B0B0F]/80 backdrop-blur-xl border-b border-white/[0.05] sticky top-0 z-50;
+    @apply bg-background/80 backdrop-blur-xl border-b border-border sticky top-0 z-50;
   }
 
   .glass-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .glass-card {
     background-color: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(4px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   }
 
   .premium-glass {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--card);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
   }
@@ -111,7 +117,7 @@ textarea,
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(to bottom, var(--border), transparent);
     opacity: 0.4;
     pointer-events: none;
     z-index: 1;
@@ -129,8 +135,8 @@ textarea,
   }
 
   .glass-light {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
@@ -155,14 +161,19 @@ textarea,
 
   /* Floating panel — used by all content sections */
   .section-panel {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card);
     backdrop-filter: blur(24px) saturate(160%);
     -webkit-backdrop-filter: blur(24px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: 1.5rem;
     transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .dark .section-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .section-panel:hover {
@@ -183,7 +194,7 @@ textarea,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  @apply bg-foreground/10 rounded-full hover:bg-foreground/20 transition-colors;
 }
 
 .hide-scrollbar {

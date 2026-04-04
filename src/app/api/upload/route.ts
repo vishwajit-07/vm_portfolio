@@ -9,7 +9,7 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 export const POST = withAuth(async (req) => {
   try {
     const formData = await req.formData();
-    const file = formData.get('image') as File;
+    const file = (formData.get('file') || formData.get('image')) as File;
 
     if (!file) {
       return NextResponse.json(

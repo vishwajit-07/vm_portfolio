@@ -9,20 +9,19 @@ export async function GET(request: Request) {
     const skip = parseInt(searchParams.get('skip') || '0');
 
     await connectDB();
-    
-    // In our schema, everything is in one document. We need to slice the projects array.
-    const portfolio = await Portfolio.findOne({}, { 
-      projects: { $slice: [skip, limit] } 
+
+    const portfolio = await Portfolio.findOne({}, {
+      projects: { $slice: [skip, limit] }
     }).lean();
 
     if (!portfolio) {
       return NextResponse.json({ success: false, message: 'Portfolio not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       data: portfolio.projects,
-      hasMore: portfolio.projects.length === limit 
+      hasMore: portfolio.projects.length === limit
     });
   } catch (error: any) {
     console.error('Error fetching projects:', error);

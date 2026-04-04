@@ -21,8 +21,8 @@ export async function uploadToCloudinary(
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-        resource_type: 'image',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf'],
+        resource_type: 'auto',
       },
       (error, result) => {
         if (error || !result) return reject(error);

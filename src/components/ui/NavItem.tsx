@@ -23,7 +23,7 @@ export default function NavItem({
 }: NavItemProps) {
 
   const containerVariants = {
-    initial: { width: 50, backgroundColor: 'rgba(255,255,255,0.95)' },
+    initial: { width: 50, backgroundColor: 'var(--card)' },
     expanded: { width: 165, backgroundColor: 'rgba(255,255,255,0)' }
   };
 
@@ -54,7 +54,7 @@ export default function NavItem({
           stiffness: 400,
           damping: 30
         }}
-        className="relative flex items-center justify-start h-[50px] rounded-full overflow-hidden flex-nowrap border border-black/5 active:scale-95 transition-transform shadow-lg"
+        className="relative flex items-center justify-start h-[50px] rounded-full overflow-hidden flex-nowrap border border-border active:scale-95 transition-transform shadow-lg"
       >
 
         {/* ORANGE GRADIENT BACKGROUND */}
@@ -81,7 +81,7 @@ export default function NavItem({
             size={18}
             className={`
               transition-all duration-500
-              ${active ? 'text-white' : 'text-gray-500 group-hover:text-white'}
+              ${active ? 'text-white' : 'text-foreground/50 group-hover:text-white'}
             `}
           />
         </div>

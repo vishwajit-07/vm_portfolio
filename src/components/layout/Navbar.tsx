@@ -14,6 +14,7 @@ import {
   FolderKanban,
   Mail,
   Layers,
+  FileText,
 } from 'lucide-react';
 
 import NavItem from '@/components/ui/NavItem';
@@ -24,6 +25,7 @@ const navItems = [
   { name: 'Projects', id: 'projects', icon: FolderKanban },
   { name: 'Education', id: 'education', icon: GraduationCap },
   { name: 'Skills', id: 'skills', icon: Layers },
+  { name: 'Resume', id: 'resume', icon: FileText },
   { name: 'Contact', id: 'contact', icon: Mail },
 ];
 
@@ -64,7 +66,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-        ? 'bg-[#0B0B0F]/80 backdrop-blur-xl border-b border-white/10 h-14'
+        ? 'bg-background/80 backdrop-blur-xl border-b border-border h-14'
         : 'bg-transparent h-20'
         }`}
     >
@@ -75,14 +77,13 @@ export default function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(249,115,22,0.4)]">
             {'V'}
           </div>
-          <span className="text-sm font-semibold text-white uppercase">
+          <span className="hidden md:block text-sm font-semibold text-foreground uppercase">
             {'VISHWAJIT'}
           </span>
         </Link>
 
-        {/* DESKTOP NAV */}
         <nav className="hidden md:flex items-center gap-6">
-          <ul className="relative flex items-center gap-2 p-1 rounded-full bg-white/5 backdrop-blur-xl border border-white/10">
+          <ul className="relative flex items-center gap-2 p-1 rounded-full bg-card backdrop-blur-xl border border-border">
 
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
@@ -110,17 +111,16 @@ export default function Navbar() {
             })}
           </ul>
 
-          {/* Portal */}
           <Link
             href="/admin/login"
-            className="px-4 h-9 flex items-center justify-center rounded-full border border-white/10 text-xs text-white uppercase tracking-widest hover:bg-white/5"
+            className="px-4 h-9 flex items-center justify-center rounded-full border border-border text-xs text-foreground/70 uppercase tracking-widest hover:bg-card"
           >
             Portal
           </Link>
         </nav>
 
-        {/* MOBILE PILL NAV */}
-        <nav className="md:hidden flex items-center gap-2 overflow-x-auto hide-scrollbar pl-2 pr-2">
+        {/* MOBILE NAV (TOP) */}
+        <nav className="md:hidden flex items-center gap-2 overflow-x-auto hide-scrollbar ml-4">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             const Icon = item.icon;
@@ -129,14 +129,20 @@ export default function Navbar() {
                 key={item.id}
                 href={`#${item.id}`}
                 className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${isActive
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]'
-                    : 'bg-white/5 border border-white/10 text-white/50 hover:text-white hover:bg-white/10'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow-premium'
+                  : 'bg-card border border-border text-foreground/50 hover:text-orange-500 hover:bg-orange-500/10'
                   }`}
               >
                 <Icon size={14} />
               </Link>
             );
           })}
+          <Link
+            href="/admin/login"
+            className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-border text-foreground/70 hover:bg-card ml-1 bg-card"
+          >
+            <div className="text-[10px] uppercase font-bold">In</div>
+          </Link>
         </nav>
       </div>
     </header>

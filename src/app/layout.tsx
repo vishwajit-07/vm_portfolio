@@ -57,7 +57,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="relative min-h-full flex flex-col font-sans bg-[#0B0B0F] text-[#f8fafc] selection:bg-orange-500/30 overflow-x-hidden">
+      <body className="relative min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-orange-500/30 overflow-x-hidden">
         <div className="bg-mesh-noise" />
         <Providers>
           <CustomCursor />

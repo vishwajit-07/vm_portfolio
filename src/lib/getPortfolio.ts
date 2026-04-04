@@ -80,6 +80,7 @@ export interface PortfolioData {
   title?: string;
   bio?: string;
   profileImage?: string;
+  resumeUrl?: string; // added
   skills?: Skill[];
   experience?: Experience[];
   education?: Education[];

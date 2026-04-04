@@ -11,7 +11,7 @@ import FadeIn from '@/components/animations/FadeIn';
 
 export default function Education({ items }: EducationProps) {
   return (
-    <section id="education" className="relative py-24 px-6 overflow-hidden border-t border-white/[0.04]">
+    <section id="education" className="relative py-24 px-6 overflow-hidden border-t border-border-subtle">
       <div className="max-w-6xl xl:max-w-[1150px] mx-auto relative z-10">
         <FadeIn>
           <div className="mb-16 space-y-4 text-center md:text-left">
@@ -21,11 +21,11 @@ export default function Education({ items }: EducationProps) {
               </span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white leading-none">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-foreground leading-none">
               Academic <span className="text-gradient-primary">Background</span>
             </h2>
 
-            <p className="text-white/40 font-medium text-sm md:text-base max-w-lg leading-relaxed mx-auto md:mx-0">
+            <p className="text-foreground/40 font-medium text-sm md:text-base max-w-lg leading-relaxed mx-auto md:mx-0">
               A solid theoretical foundation in computing and modular systems engineering.
             </p>
           </div>
@@ -36,7 +36,7 @@ export default function Education({ items }: EducationProps) {
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="h-48 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] animate-pulse"
+                className="h-48 rounded-[2.5rem] bg-card border border-border-subtle animate-pulse"
               />
             ))}
           </div>

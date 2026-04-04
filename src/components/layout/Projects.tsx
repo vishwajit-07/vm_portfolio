@@ -18,7 +18,7 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10 backdrop-blur-3xl bg-black/90"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10 backdrop-blur-3xl bg-background/90"
       onClick={onClose}
     >
       <motion.div
@@ -26,12 +26,12 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
         animate={{ scale: 1, y: 0, opacity: 1 }}
         exit={{ scale: 0.9, y: 30, opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden premium-glass rounded-[2rem] border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row"
+        className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden premium-glass rounded-[2rem] border border-border shadow-[0_40px_100px_rgba(0,0,0,0.2)] dark:shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row bg-card"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-50 p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:scale-110 transition-all text-white/50 hover:text-white"
+          className="absolute top-6 right-6 z-50 p-3 rounded-full bg-card border border-border hover:bg-orange-500/10 hover:scale-110 transition-all text-foreground/50 hover:text-orange-500"
         >
           <X className="w-5 h-5" />
         </button>
@@ -44,7 +44,7 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 60vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
         </div>
 
         <div className="w-full md:w-2/5 p-8 flex flex-col overflow-y-auto hide-scrollbar">
@@ -57,14 +57,14 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
             </div>
           </div>
 
-          <h2 className="text-xl font-bold text-white mb-4 tracking-tight">{proj.title}</h2>
-          <p className="text-white/60 text-[13px] leading-relaxed mb-8 font-medium">{proj.description}</p>
+          <h2 className="text-xl font-bold text-foreground mb-4 tracking-tight">{proj.title}</h2>
+          <p className="text-foreground/60 text-[13px] leading-relaxed mb-8 font-medium">{proj.description}</p>
 
           <div className="space-y-4 mb-8">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-white/20">Technology Stack</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground/20">Technology Stack</h4>
             <div className="flex flex-wrap gap-2">
               {proj.techStack?.map((tech: string) => (
-                <span key={tech} className="px-2.5 py-1 rounded-lg bg-white/5 text-white/70 border border-white/10 text-[9px] font-bold uppercase tracking-wider">
+                <span key={tech} className="px-2.5 py-1 rounded-lg bg-card text-foreground/70 border border-border-subtle text-[9px] font-bold uppercase tracking-wider">
                   {tech}
                 </span>
               ))}
@@ -131,7 +131,7 @@ function OrbitCard({ proj, i, total, angle, onClick }: { proj: Project; i: numbe
     >
       <motion.div
         style={{ rotateX, rotateY, filter: brightnessValue }}
-        className="premium-glass w-[260px] h-[360px] md:w-[290px] md:h-[400px] rounded-[2.2rem] border border-white/10 overflow-hidden group shadow-2xl relative transition-shadow duration-500"
+        className="premium-glass w-[260px] h-[360px] md:w-[290px] md:h-[400px] rounded-[2.2rem] border border-border-subtle overflow-hidden group shadow-2xl relative transition-shadow duration-500 bg-card"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
 
@@ -144,7 +144,7 @@ function OrbitCard({ proj, i, total, angle, onClick }: { proj: Project; i: numbe
             className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-30 grayscale group-hover:grayscale-0"
             sizes="290px"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
 
         <div className="relative z-10 h-full p-7 flex flex-col justify-end">
@@ -157,13 +157,13 @@ function OrbitCard({ proj, i, total, angle, onClick }: { proj: Project; i: numbe
             <h3 className="text-lg md:text-xl font-bold text-white tracking-tight leading-tight group-hover:text-orange-400 transition-colors">{proj.title}</h3>
           </div>
 
-          <p className="text-[10px] md:text-[11px] text-white/40 font-medium line-clamp-2 leading-relaxed mb-4 group-hover:text-white/60 transition-colors">
+          <p className="text-[10px] md:text-[11px] text-foreground/40 font-medium line-clamp-2 leading-relaxed mb-4 group-hover:text-foreground/60 transition-colors">
             {proj.description}
           </p>
 
           <div className="flex flex-wrap gap-1.5">
             {proj.techStack?.slice(0, 3).map((t: string) => (
-              <span key={t} className="px-2 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/5">
+              <span key={t} className="px-2 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest bg-card text-foreground/40 border border-border-subtle">
                 {t}
               </span>
             ))}
@@ -237,7 +237,7 @@ export default function Projects({ items }: { items: Project[] }) {
   };
 
   return (
-    <section id="projects" className="relative py-24 px-6 border-t border-white/[0.04] overflow-hidden min-h-[90vh] flex flex-col justify-center">
+    <section id="projects" className="relative py-24 px-6 border-t border-border-subtle overflow-hidden min-h-[90vh] flex flex-col justify-center">
 
       {/* Drag Overlay */}
       <motion.div
@@ -266,11 +266,11 @@ export default function Projects({ items }: { items: Project[] }) {
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-orange-500">Track 02</span>
           </div>
 
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-white leading-none">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-foreground leading-none">
             Selected <span className="text-gradient-primary">Works</span>
           </h2>
 
-          <p className="text-white/40 font-medium text-[13px] md:text-sm max-w-lg leading-relaxed mx-auto md:mx-0">
+          <p className="text-foreground/40 font-medium text-[13px] md:text-sm max-w-lg leading-relaxed mx-auto md:mx-0">
             A curated showcase of technical projects, full-stack applications, and open-source contributions.
           </p>
         </motion.div>
@@ -280,18 +280,18 @@ export default function Projects({ items }: { items: Project[] }) {
       <div className="relative h-[550px] w-full max-w-7xl mx-auto hidden md:flex items-center justify-center">
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-12 z-[100] pointer-events-none">
           <motion.button
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(249,115,22,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={() => rotate('left')}
-            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+            className="p-5 rounded-full bg-card border border-border text-foreground/50 hover:text-orange-500 transition-colors pointer-events-auto group shadow-xl"
           >
             <ChevronLeft className="w-8 h-8 group-hover:-translate-x-1 transition-transform" />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileHover={{ scale: 1.1, backgroundColor: 'rgba(249,115,22,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={() => rotate('right')}
-            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+            className="p-5 rounded-full bg-card border border-border text-foreground/50 hover:text-orange-500 transition-colors pointer-events-auto group shadow-xl"
           >
             <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
           </motion.button>
@@ -315,7 +315,7 @@ export default function Projects({ items }: { items: Project[] }) {
                   onClick={() => setSelectedProject(proj)}
                 />
               ))}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] border border-white/[0.03] rounded-full" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] border border-border-subtle rounded-full" />
             </div>
           )}
         </motion.div>
@@ -331,7 +331,7 @@ export default function Projects({ items }: { items: Project[] }) {
                 key={proj._id || i}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                className="snap-center shrink-0 w-[280px] h-[380px] relative rounded-[2rem] premium-glass border border-white/10 overflow-hidden"
+                className="snap-center shrink-0 w-[280px] h-[380px] relative rounded-[2rem] bg-card border border-border-subtle overflow-hidden"
                 onClick={() => setSelectedProject(proj)}
               >
                 <div className="absolute inset-0 z-0">
@@ -342,14 +342,14 @@ export default function Projects({ items }: { items: Project[] }) {
                     className="object-cover opacity-30 grayscale"
                     sizes="280px"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
                 </div>
-                <div className="relative z-10 h-full p-7 flex flex-col justify-end">
-                  <h3 className="text-xl font-bold text-white mb-2 italic uppercase">{proj.title}</h3>
-                  <p className="text-[10px] text-white/40 line-clamp-2 mb-4 font-medium">{proj.description}</p>
+                <div className="relative z-10 h-full p-7 flex flex-col justify-end text-left">
+                  <h3 className="text-xl font-bold text-foreground mb-2 italic uppercase">{proj.title}</h3>
+                  <p className="text-[10px] text-foreground/40 line-clamp-2 mb-4 font-medium">{proj.description}</p>
                   <div className="flex flex-wrap gap-1.5 mt-auto">
                     {proj.techStack?.slice(0, 3).map((t: string) => (
-                      <span key={t} className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/5">
+                      <span key={t} className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest bg-orange-500/5 text-foreground/40 border border-orange-500/10">
                         {t}
                       </span>
                     ))}
@@ -366,20 +366,19 @@ export default function Projects({ items }: { items: Project[] }) {
           {/* Infinite Scroll Trigger */}
           <div ref={observerTarget} className="h-10 w-full flex items-center justify-center pointer-events-auto">
             {loading && (
-              <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <div className="flex items-center gap-3 bg-card px-4 py-2 rounded-full border border-border-subtle">
                 <Loader2 className="w-4 h-4 text-orange-500 animate-spin" />
-                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Loading More Projects...</span>
+                <span className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">Loading More Projects...</span>
               </div>
             )}
             {!hasMore && allProjects.length > 6 && (
-              <span className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">End of Portfolio</span>
+              <span className="text-[9px] font-bold text-foreground/20 uppercase tracking-[0.2em]">End of Portfolio</span>
             )}
           </div>
-
           <motion.div
             animate={{ x: [-10, 10, -10] }}
             transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-white/20"
+            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-foreground/20"
           >
             <ChevronRight className="w-4 h-4 text-orange-500" /> Interaction : Swipe / Drag to Rotate
           </motion.div>

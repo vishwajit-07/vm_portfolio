@@ -18,11 +18,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem>
-        <ReactLenis root>
-          {children}
-        </ReactLenis>
-      </NextThemesProvider>
+      <ReactLenis root>
+        {children}
+      </ReactLenis>
     </QueryClientProvider>
   );
 }

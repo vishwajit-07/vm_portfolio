@@ -49,7 +49,7 @@ export function TimelineContainer({ children, className }: { children: ReactNode
       style={{ position: 'relative' }} // Ultra-explicit
     >
       {/* Background Line */}
-      <div className="absolute left-[24px] md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] bg-white/[0.03]" />
+      <div className="absolute left-[24px] md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] bg-border-subtle" />
       
       {/* Progressive Fill Line - Only track after mount */}
       {mounted && <TimelineProgress containerRef={containerRef} />}
@@ -94,15 +94,15 @@ function LiveDurationTimer({ startDate }: { startDate?: string }) {
   if (!startDate) return null;
 
   const Block = ({ value, label }: { value: number, label: string }) => (
-    <div className="flex flex-col items-center bg-white/[0.04] border border-white/[0.08] rounded-md p-2 min-w-[36px]">
-      <span className="text-white font-bold text-[13px]">{value.toString().padStart(2, '0')}</span>
-      <span className="text-white/40 text-[8px] font-bold uppercase tracking-wider">{label}</span>
+    <div className="flex flex-col items-center bg-card border border-border-subtle rounded-md p-2 min-w-[36px]">
+      <span className="text-foreground font-bold text-[13px]">{value.toString().padStart(2, '0')}</span>
+      <span className="text-foreground/40 text-[8px] font-bold uppercase tracking-wider">{label}</span>
     </div>
   );
 
   return (
-    <div className="mt-4 pt-4 border-t border-white/[0.05]">
-      <div className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-3">Live Duration:</div>
+    <div className="mt-4 pt-4 border-t border-border-subtle">
+      <div className="text-[10px] font-bold text-foreground/50 uppercase tracking-widest mb-3">Live Duration:</div>
       <div className="flex flex-wrap gap-2">
         <Block value={duration.yrs} label="Yrs" />
         <Block value={duration.mos} label="Mos" />
@@ -186,7 +186,7 @@ export function TimelineItem({
         viewport={{ once: true }}
         transition={{ duration: 0.3, delay: 0.2 }}
         className={cn(
-          "absolute top-6 w-3 h-3 rounded-full bg-orange-500 border-[3px] border-[#0B0B0F] z-10 shadow-[0_0_20px_rgba(249,115,22,0.8)] group-hover:scale-125 transition-transform duration-300",
+          "absolute top-6 w-3 h-3 rounded-full bg-orange-500 border-[3px] border-background z-10 shadow-[0_0_20px_rgba(249,115,22,0.8)] group-hover:scale-125 transition-transform duration-300",
           "left-[18px] md:left-1/2 md:-translate-x-1/2 md:translate-y-2"
         )}
       >
@@ -201,7 +201,7 @@ export function TimelineItem({
 
       {/* Modern Card */}
       <div className={cn(
-        "glass-light will-change-premium relative p-5 md:p-6 rounded-2xl border border-white/[0.05] group-hover:bg-white/[0.06] group-hover:border-orange-500/30 transition-all duration-300 w-full md:w-[calc(50%-2.5rem)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.1)]",
+        "glass-light will-change-premium relative p-5 md:p-6 rounded-2xl border border-border-subtle group-hover:bg-orange-500/10 group-hover:border-orange-500/30 transition-all duration-300 w-full md:w-[calc(50%-2.5rem)] group-hover:shadow-[0_0_30px_rgba(249,115,22,0.1)]",
         isLeft ? "md:mr-auto" : "md:ml-auto"
       )}>
         
@@ -210,13 +210,13 @@ export function TimelineItem({
           <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-4">
             {/* Icon Letter optionally */}
             {iconLetter && (
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center shadow-inner">
-                <span className="text-white font-black text-xl drop-shadow-md">{iconLetter.substring(0, 1)}</span>
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-purple-500/10 border border-border-subtle flex items-center justify-center shadow-inner">
+                <span className="text-foreground font-black text-xl drop-shadow-md">{iconLetter.substring(0, 1)}</span>
               </div>
             )}
             
             <div className="flex-grow">
-              <h3 className="text-lg md:text-xl font-bold text-white tracking-tight group-hover:text-orange-400 transition-colors duration-300">
+              <h3 className="text-lg md:text-xl font-bold text-foreground tracking-tight group-hover:text-orange-400 transition-colors duration-300">
                 {title}
               </h3>
               <div className="text-orange-500 font-bold text-[10px] md:text-[11px] uppercase tracking-widest mt-1 mb-2.5">
@@ -225,13 +225,13 @@ export function TimelineItem({
 
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                 {location && (
-                  <div className="flex items-center gap-1 text-white/50 text-[10px] font-medium">
+                  <div className="flex items-center gap-1 text-foreground/50 text-[10px] font-medium">
                     <MapPin size={12} />
                     <span>{location}</span>
                   </div>
                 )}
                 {/* Duration Badge */}
-                <span className="flex items-center gap-1 text-white/90 font-bold text-[9px] md:text-[10px] uppercase tracking-wider bg-white/[0.05] px-2 py-0.5 rounded border border-white/[0.08] transition-all duration-300 group-hover:border-orange-500/40 group-hover:bg-orange-500/10 group-hover:text-orange-400">
+                <span className="flex items-center gap-1 text-foreground/90 font-bold text-[9px] md:text-[10px] uppercase tracking-wider bg-card px-2 py-0.5 rounded border border-border-subtle transition-all duration-300 group-hover:border-orange-500/40 group-hover:bg-orange-500/10 group-hover:text-orange-400">
                   <Calendar size={11} className="hidden sm:block"/>
                   {duration}
                 </span>
@@ -244,7 +244,7 @@ export function TimelineItem({
 
           {/* Description */}
           {description && (
-            <p className="text-white/60 text-xs md:text-[13px] font-medium leading-relaxed mt-4 text-left">
+            <p className="text-foreground/60 text-xs md:text-[13px] font-medium leading-relaxed mt-4 text-left">
               {description}
             </p>
           )}
@@ -253,7 +253,7 @@ export function TimelineItem({
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-4">
               {tags.map((tag, idx) => (
-                <span key={idx} className="px-2 py-0.5 bg-white/[0.03] border border-white/10 rounded-md text-[9px] md:text-[10px] font-semibold text-white/70 hover:bg-orange-500/20 hover:text-orange-400 hover:border-orange-500/30 transition-all cursor-default shadow-sm">
+                <span key={idx} className="px-2 py-0.5 bg-card border border-border-subtle rounded-md text-[9px] md:text-[10px] font-semibold text-foreground/70 hover:bg-orange-500/20 hover:text-orange-400 hover:border-orange-500/30 transition-all cursor-default shadow-sm font-sans uppercase tracking-tighter">
                   {tag}
                 </span>
               ))}
@@ -262,13 +262,13 @@ export function TimelineItem({
 
           {/* Key Achievements Toggle */}
           {itemsList && itemsList.length > 0 && (
-            <div className="mt-5 pt-3 border-t border-white/[0.05]">
+            <div className="mt-5 pt-3 border-t border-border-subtle">
               <button 
                 onClick={() => setExpanded(!expanded)}
-                className="flex items-center justify-between text-white/50 hover:text-orange-500 text-[10px] font-bold uppercase tracking-wider transition-colors w-full group/btn"
+                className="flex items-center justify-between text-foreground/50 hover:text-orange-500 text-[10px] font-bold uppercase tracking-wider transition-colors w-full group/btn"
               >
                 <span>{itemsList.length} Key Achievements</span>
-                <ChevronDown size={12} className={cn("transition-transform duration-300 group-hover/btn:translate-y-0.5", expanded ? "rotate-180" : "")} />
+                <ChevronDown size={12} className={cn("transition-transform duration-300 group-hover/btn:translate-y-0.5 text-foreground/30 group-hover:text-orange-500", expanded ? "rotate-180" : "")} />
               </button>
               
               <AnimatePresence>
@@ -282,7 +282,7 @@ export function TimelineItem({
                     {itemsList.map((item, idx) => (
                       <motion.li 
                         key={idx}
-                        className="flex items-start gap-2.5 text-white/60 text-xs md:text-[13px] leading-relaxed text-left"
+                        className="flex items-start gap-2.5 text-foreground/60 text-xs md:text-[13px] leading-relaxed text-left font-medium"
                       >
                         <span className="mt-1.5 shrink-0 w-1 h-1 rounded-full bg-orange-500/40 group-hover:bg-orange-500 transition-colors shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
                         <span>{item}</span>

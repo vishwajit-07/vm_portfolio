@@ -39,7 +39,7 @@ const gravityFall = {
 
 export default function Skills({ items }: SkillsProps) {
   return (
-    <section id="skills" className="relative py-24 px-6 overflow-hidden border-t border-white/[0.04] min-h-[600px]">
+    <section id="skills" className="relative py-24 px-6 overflow-hidden border-t border-border-subtle min-h-[600px]">
       <div className="max-w-6xl mx-auto relative z-10">
 
         {/* HEADER + CUBE */}
@@ -57,11 +57,11 @@ export default function Skills({ items }: SkillsProps) {
               </span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-white">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-foreground">
               Technical <span className="text-orange-500">Core</span>
             </h2>
 
-            <p className="text-white/40 max-w-lg text-sm md:text-base leading-relaxed">
+            <p className="text-foreground/40 max-w-lg text-sm md:text-base leading-relaxed">
               A high-performance technical stack engineered for modular scalability and precision.
             </p>
           </motion.div>
@@ -80,7 +80,7 @@ export default function Skills({ items }: SkillsProps) {
         {items.length === 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {[...Array(10)].map((_, i) => (
-              <div key={i} className="h-28 rounded-2xl bg-white/[0.02] border border-white/[0.05] animate-pulse" />
+              <div key={i} className="h-28 rounded-2xl bg-card border border-border-subtle animate-pulse" />
             ))}
           </div>
         ) : (
@@ -96,23 +96,23 @@ export default function Skills({ items }: SkillsProps) {
                 key={skill._id || i}
                 variants={gravityFall as any}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className="relative glass-light will-change-premium shimmer-effect p-5 rounded-2xl group flex flex-col gap-5 hover:bg-white/5 transition-colors duration-300"
+                className="relative glass-light will-change-premium shimmer-effect p-5 rounded-2xl group flex flex-col gap-5 hover:bg-orange-500/10 transition-colors duration-300"
               >
                 <div className="flex items-center justify-between">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg bg-white/[0.03] group-hover:bg-orange-500/20 group-hover:text-orange-400">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg bg-orange-500/5 group-hover:bg-orange-500/20 group-hover:text-orange-400 border border-border-subtle transition-colors">
                     {skill.icon || '⚡'}
                   </div>
-                  <span className="text-[9px] text-white/30 font-bold">
+                  <span className="text-[9px] text-foreground/30 font-bold">
                     {skill.level}%
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:text-orange-400">
+                  <h3 className="text-[10px] font-bold text-foreground uppercase tracking-widest group-hover:text-orange-400">
                     {skill.name}
                   </h3>
 
-                  <div className="h-[2px] bg-white/[0.05] mt-2 overflow-hidden rounded-full">
+                  <div className="h-[2px] bg-border-subtle mt-2 overflow-hidden rounded-full">
                     <motion.div
                       initial={{ width: 0 }}
                       whileInView={{ width: `${skill.level}%` }}

@@ -7,6 +7,7 @@ const portfolioSchema = new mongoose.Schema(
     title: { type: String, trim: true },
     bio: { type: String },
     profileImage: { type: String }, // Cloudinary URL
+    resumeUrl: { type: String }, // Cloudinary URL
     logo: { type: String }, // Cloudinary URL
 
     // Skills

@@ -29,7 +29,7 @@ function TimelineProgress({ containerRef }: { containerRef: React.RefObject<HTML
   return (
     <motion.div 
       style={{ scaleY, originY: 0 }}
-      className="absolute left-[24px] md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] bg-gradient-to-b from-orange-500 via-purple-500 to-transparent z-10" 
+      className="absolute left-[24px] md:left-1/2 md:-translate-x-1/2 top-4 bottom-4 w-[2px] bg-gradient-to-b from-orange-500 via-purple-500 to-transparent z-10 shadow-[0_0_15px_rgba(249,115,22,0.4)]" 
     />
   );
 }
@@ -186,10 +186,16 @@ export function TimelineItem({
         viewport={{ once: true }}
         transition={{ duration: 0.3, delay: 0.2 }}
         className={cn(
-          "absolute top-6 w-3 h-3 rounded-full bg-orange-500 border-[3px] border-[#0B0B0F] z-10 shadow-[0_0_15px_rgba(249,115,22,0.6)] group-hover:scale-125 transition-transform duration-300",
-          "left-[18px] md:left-1/2 md:-translate-x-1/2 md:translate-y-2" // Desktop: exactly on center line. Mobile: left line.
+          "absolute top-6 w-3 h-3 rounded-full bg-orange-500 border-[3px] border-[#0B0B0F] z-10 shadow-[0_0_20px_rgba(249,115,22,0.8)] group-hover:scale-125 transition-transform duration-300",
+          "left-[18px] md:left-1/2 md:-translate-x-1/2 md:translate-y-2"
         )}
       >
+        {/* Electric Outer Pulse */}
+        <motion.div 
+          animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 bg-orange-500 rounded-full scale-150 opacity-20"
+        />
         <div className="absolute inset-0 bg-orange-500 rounded-full animate-ping opacity-20 hidden md:block"></div>
       </motion.div>
 

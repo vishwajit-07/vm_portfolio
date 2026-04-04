@@ -1,13 +1,17 @@
 'use client';
 import { motion, AnimatePresence, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { ExternalLink, Github, X, Star, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import type { Project } from '@/lib/getPortfolio';
 import axios from 'axios';
-import { ExternalLink, Github, X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
-// --- Components ---
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1200&auto=format&fit=crop&q=80';
 
-function ProjectModal({ proj, onClose }: { proj: any, onClose: () => void }) {
-  const images = proj.images?.length > 0 ? proj.images : ['https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1200&auto=format&fit=crop&q=80'];
+// --- Modal ---
+
+function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void }) {
+  const image = proj.images?.[0] || FALLBACK_IMG;
 
   return (
     <motion.div
@@ -33,7 +37,13 @@ function ProjectModal({ proj, onClose }: { proj: any, onClose: () => void }) {
         </button>
 
         <div className="w-full md:w-3/5 h-64 md:h-auto relative overflow-hidden">
-          <img src={images[0]} className="absolute inset-0 w-full h-full object-cover" alt={proj.title} />
+          <Image
+            src={image}
+            alt={proj.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 60vw"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         </div>
 
@@ -79,11 +89,12 @@ function ProjectModal({ proj, onClose }: { proj: any, onClose: () => void }) {
   );
 }
 
-function OrbitCard({ proj, i, total, angle, onClick }: any) {
+// --- Orbit Card ---
+
+function OrbitCard({ proj, i, total, angle, onClick }: { proj: Project; i: number; total: number; angle: any; onClick: () => void }) {
   const angleOffset = (i / total) * Math.PI * 2;
   const currentAngle = useTransform(angle, (a: number) => a + angleOffset);
 
-  // Use fixed scale/depth based on professional UI requirements
   const x = useTransform(currentAngle, (a: number) => Math.sin(a) * 420);
   const z = useTransform(currentAngle, (a: number) => Math.cos(a) * 380);
 
@@ -95,20 +106,19 @@ function OrbitCard({ proj, i, total, angle, onClick }: any) {
   const brightnessValue = useTransform(brightness, (v) => `brightness(${v})`);
   const zIndex = useTransform(z, (v) => Math.floor(v + 1000));
 
-  // Mouse tilt effect
   const mouseX = useSpring(0, { stiffness: 150, damping: 20 });
   const mouseY = useSpring(0, { stiffness: 150, damping: 20 });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const xVal = (e.clientX - rect.left) / rect.width - 0.5;
-    const yVal = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(xVal);
-    mouseY.set(yVal);
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
   const rotateX = useTransform(mouseY, [-0.5, 0.5], [12, -12]);
   const rotateY = useTransform(mouseX, [-0.5, 0.5], [-12, 12]);
+
+  const cardImage = proj.images?.[0] || FALLBACK_IMG;
 
   return (
     <motion.div
@@ -117,15 +127,23 @@ function OrbitCard({ proj, i, total, angle, onClick }: any) {
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
+      suppressHydrationWarning
     >
       <motion.div
         style={{ rotateX, rotateY, filter: brightnessValue }}
         className="premium-glass w-[260px] h-[360px] md:w-[290px] md:h-[400px] rounded-[2.2rem] border border-white/10 overflow-hidden group shadow-2xl relative transition-shadow duration-500"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
 
+        {/* Background image */}
         <div className="absolute inset-0 z-0">
-          <img src={proj.images?.[0] || 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop&q=60'} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-30 grayscale group-hover:grayscale-0" alt="" />
+          <Image
+            src={cardImage}
+            alt={proj.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-30 grayscale group-hover:grayscale-0"
+            sizes="290px"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
         </div>
 
@@ -161,46 +179,78 @@ function OrbitCard({ proj, i, total, angle, onClick }: any) {
   );
 }
 
-export default function Projects() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+// --- Main Section ---
 
-  // Motion value for the rotation angle
+export default function Projects({ items }: { items: Project[] }) {
+  const [allProjects, setAllProjects] = useState<Project[]>(items);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [skip, setSkip] = useState(items.length);
+  const [hasMore, setHasMore] = useState(items.length >= 6); 
+  const observerTarget = useRef(null);
+
   const baseAngle = useMotionValue(0);
   const angle = useSpring(baseAngle, { stiffness: 40, damping: 30, restDelta: 0.001 });
 
-  const rotate = (dir: 'left' | 'right') => {
-    if (items.length === 0) return;
-    const step = (Math.PI * 2) / items.length;
-    baseAngle.set(baseAngle.get() + (dir === 'left' ? step : -step));
+  const loadMore = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/projects?limit=6&skip=${skip}`);
+      const newItems = response.data.data;
+      if (newItems.length > 0) {
+        setAllProjects(prev => [...prev, ...newItems]);
+        setSkip(prev => prev + newItems.length);
+        setHasMore(response.data.hasMore);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error loading more projects:', error);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    axios.get(`/api/portfolio`)
-      .then(({ data }) => {
-        if (data.success) setItems(data.data.projects || []);
-      })
-      .catch((err) => console.error("Project Data Failure:", err))
-      .finally(() => setLoading(false));
-  }, []);
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasMore, skip, loading]);
+
+  const rotate = (dir: 'left' | 'right') => {
+    if (allProjects.length === 0) return;
+    const step = (Math.PI * 2) / allProjects.length;
+    baseAngle.set(baseAngle.get() + (dir === 'left' ? step : -step));
+  };
 
   return (
     <section id="projects" className="relative py-24 px-6 border-t border-white/[0.04] overflow-hidden min-h-[90vh] flex flex-col justify-center">
 
-      {/* Interaction Overlay: Detects Drag to spin the orbit */}
+      {/* Drag Overlay */}
       <motion.div
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0}
         onDrag={(_, info) => {
-          // Convert drag momentum into rotation
           baseAngle.set(baseAngle.get() + info.delta.x * 0.005);
         }}
         className="absolute inset-0 z-0 cursor-grab active:cursor-grabbing"
       />
 
-      {/* Decorative Glow */}
+      {/* Glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-500/5 blur-[120px] rounded-full" />
       </div>
@@ -209,13 +259,11 @@ export default function Projects() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           className="mb-20 space-y-3 text-center md:text-left"
         >
           <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20">
-            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-orange-500">
-              Track 02
-            </span>
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-orange-500">Track 02</span>
           </div>
 
           <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-white leading-none">
@@ -228,16 +276,14 @@ export default function Projects() {
         </motion.div>
       </div>
 
-      {/* 💻 DESKTOP ORBITAL DISPLAY (Pan-Controlled) */}
+      {/* 💻 DESKTOP ORBITAL */}
       <div className="relative h-[550px] w-full max-w-7xl mx-auto hidden md:flex items-center justify-center">
-
-        {/* Navigation Arrows */}
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-12 z-[100] pointer-events-none">
           <motion.button
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={() => rotate('left')}
-            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)] active:shadow-orange-500/20"
+            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           >
             <ChevronLeft className="w-8 h-8 group-hover:-translate-x-1 transition-transform" />
           </motion.button>
@@ -245,7 +291,7 @@ export default function Projects() {
             whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.1)' }}
             whileTap={{ scale: 0.9 }}
             onClick={() => rotate('right')}
-            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)] active:shadow-orange-500/20"
+            className="p-5 rounded-full premium-glass border border-white/10 text-white/50 hover:text-white transition-colors pointer-events-auto group shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           >
             <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
           </motion.button>
@@ -257,62 +303,82 @@ export default function Projects() {
           }}
           className="relative w-full h-full flex items-center justify-center perspective-2000 transform-style-3d cursor-grab active:cursor-grabbing"
         >
-          {!loading && items.length > 0 && (
+          {allProjects.length > 0 && (
             <div className="relative w-full h-full flex items-center justify-center pointer-events-none transform-style-3d">
-              {items.map((proj, i) => (
+              {allProjects.map((proj, i) => (
                 <OrbitCard
                   key={proj._id || i}
                   proj={proj}
                   i={i}
-                  total={items.length}
+                  total={allProjects.length}
                   angle={angle}
                   onClick={() => setSelectedProject(proj)}
                 />
               ))}
-
-              {/* Minimal Orbit Path Indicator */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[850px] border border-white/[0.03] rounded-full" />
             </div>
           )}
         </motion.div>
       </div>
 
-      {/* 📱 MOBILE VIEW: Premium Horizontal Scroller */}
+      {/* 📱 MOBILE */}
       <div className="md:hidden relative z-10 w-full pointer-events-auto">
         <div className="flex overflow-x-auto snap-x snap-mandatory gap-5 px-6 hide-scrollbar pb-10">
-          {items.map((proj, i) => (
-            <motion.div
-              key={proj._id || i}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              className="snap-center shrink-0 w-[280px] h-[380px] relative rounded-[2rem] premium-glass border border-white/10 overflow-hidden"
-              onClick={() => setSelectedProject(proj)}
-            >
-              <div className="absolute inset-0 z-0">
-                <img src={proj.images?.[0]} className="w-full h-full object-cover opacity-30 grayscale" alt="" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-              </div>
-              <div className="relative z-10 h-full p-7 flex flex-col justify-end">
-                <h3 className="text-xl font-bold text-white mb-2 italic uppercase">{proj.title}</h3>
-                <p className="text-[10px] text-white/40 line-clamp-2 mb-4 font-medium">{proj.description}</p>
-                <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {proj.techStack?.slice(0, 3).map((t: string) => (
-                    <span key={t} className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/5">
-                      {t}
-                    </span>
-                  ))}
+          {allProjects.map((proj, i) => {
+            const mobileImg = proj.images?.[0] || FALLBACK_IMG;
+            return (
+              <motion.div
+                key={proj._id || i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                className="snap-center shrink-0 w-[280px] h-[380px] relative rounded-[2rem] premium-glass border border-white/10 overflow-hidden"
+                onClick={() => setSelectedProject(proj)}
+              >
+                <div className="absolute inset-0 z-0">
+                  <Image
+                    src={mobileImg}
+                    alt={proj.title}
+                    fill
+                    className="object-cover opacity-30 grayscale"
+                    sizes="280px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <div className="relative z-10 h-full p-7 flex flex-col justify-end">
+                  <h3 className="text-xl font-bold text-white mb-2 italic uppercase">{proj.title}</h3>
+                  <p className="text-[10px] text-white/40 line-clamp-2 mb-4 font-medium">{proj.description}</p>
+                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                    {proj.techStack?.slice(0, 3).map((t: string) => (
+                      <span key={t} className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest bg-white/5 text-white/40 border border-white/5">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
-      {!loading && items.length > 0 && (
+      {allProjects.length > 0 && (
         <div className="mt-12 flex flex-col items-center gap-4 relative z-10 pointer-events-none">
+          {/* Infinite Scroll Trigger */}
+          <div ref={observerTarget} className="h-10 w-full flex items-center justify-center pointer-events-auto">
+            {loading && (
+              <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                <Loader2 className="w-4 h-4 text-orange-500 animate-spin" />
+                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Loading More Projects...</span>
+              </div>
+            )}
+            {!hasMore && allProjects.length > 6 && (
+              <span className="text-[9px] font-bold text-white/20 uppercase tracking-[0.2em]">End of Portfolio</span>
+            )}
+          </div>
+
           <motion.div
             animate={{ x: [-10, 10, -10] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
             className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-white/20"
           >
             <ChevronRight className="w-4 h-4 text-orange-500" /> Interaction : Swipe / Drag to Rotate
@@ -320,7 +386,7 @@ export default function Projects() {
         </div>
       )}
 
-      {/* Project Details Modal */}
+      {/* Project Modal */}
       <AnimatePresence>
         {selectedProject && (
           <ProjectModal

@@ -2,14 +2,11 @@
 
 import {
   motion,
-  AnimatePresence,
   useScroll,
   useMotionValueEvent,
 } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
-
 import {
   Home,
   GraduationCap,
@@ -30,30 +27,15 @@ const navItems = [
   { name: 'Contact', id: 'contact', icon: Mail },
 ];
 
-
-
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [profile, setProfile] = useState<any>(null);
 
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (latest) =>
     setScrolled(latest > 50)
   );
-
-  useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const { data } = await axios.get(`/api/portfolio`);
-        if (data.success) setProfile(data.data);
-      } catch (error) {
-        console.error('Error fetching navbar data:', error);
-      }
-    };
-    fetchPortfolio();
-  }, []);
 
   // 🔥 Active section tracking
   useEffect(() => {

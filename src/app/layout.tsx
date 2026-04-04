@@ -32,13 +32,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Vishwajit",
+    "jobTitle": "Full Stack Developer",
+    "url": "https://your-portfolio-url.com", // User should update this
+    "sameAs": [
+      "https://github.com/vishwajit-07",
+      "https://linkedin.com/in/vishwajit"
+    ],
+    "description": "Innovative Full-Stack Developer specializing in clean code and modern web experiences."
+  };
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#0B0B0F] text-[#f8fafc] selection:bg-orange-500/30 overflow-x-hidden">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="relative min-h-full flex flex-col font-sans bg-[#0B0B0F] text-[#f8fafc] selection:bg-orange-500/30 overflow-x-hidden">
         <div className="bg-mesh-noise" />
         <Providers>
           <CustomCursor />

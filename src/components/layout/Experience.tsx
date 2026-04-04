@@ -1,27 +1,13 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { TimelineContainer, TimelineItem } from '@/components/ui/Timeline';
+import type { Experience as ExperienceType } from '@/lib/getPortfolio';
 
-export default function Experience() {
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+interface ExperienceProps {
+  items: ExperienceType[];
+}
 
-  useEffect(() => {
-    const fetchPortfolio = async () => {
-      try {
-        const { data } = await axios.get(`/api/portfolio`);
-        if (data.success) setItems(data.data.experience || []);
-      } catch (err) {
-        console.error('Error fetching experience:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPortfolio();
-  }, []);
-
+export default function Experience({ items }: ExperienceProps) {
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -44,7 +30,7 @@ export default function Experience() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           variants={fadeInUp}
           className="mb-12 space-y-3 text-center md:text-left"
         >
@@ -63,9 +49,9 @@ export default function Experience() {
           </p>
         </motion.div>
 
-        {loading ? (
+        {items.length === 0 ? (
           <div className="space-y-6">
-            {[1, 2].map(i => (
+            {[1, 2].map((i) => (
               <div
                 key={i}
                 className="h-32 rounded-2xl bg-white/[0.02] border border-white/[0.05] animate-pulse"
@@ -77,13 +63,12 @@ export default function Experience() {
             {items.map((exp, i) => {
               const bullets = exp.description
                 ? exp.description
-                  .split(/[-•\n]+/)
-                  .map((s: string) => s.trim())
-                  .filter((s: string) => s.length > 0)
+                    .split(/[-•\n]+/)
+                    .map((s: string) => s.trim())
+                    .filter((s: string) => s.length > 0)
                 : [];
 
-              // Calculate pseudo startDate from duration matching "Jun 2025 - Present"
-              let startDate;
+              let startDate: string | undefined;
               const isCurrent = exp.duration?.toLowerCase().includes('present');
               if (isCurrent && exp.duration) {
                 const parts = exp.duration.split('-');
@@ -99,12 +84,12 @@ export default function Experience() {
                   position={i % 2 === 0 ? 'left' : 'right'}
                   title={exp.role}
                   subtitle={exp.company}
-                  duration={exp.duration}
+                  duration={exp.duration ?? ''}
                   description={bullets.length === 0 ? exp.description : undefined}
                   itemsList={bullets.length > 0 ? bullets : undefined}
                   tags={exp.skills}
                   startDate={startDate}
-                  iconLetter={exp.company ? exp.company.charAt(0) : "E"}
+                  iconLetter={exp.company ? exp.company.charAt(0) : 'E'}
                 />
               );
             })}

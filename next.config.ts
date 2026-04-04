@@ -10,13 +10,20 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
         pathname: "/uploads/**",
       },
     ],
-    unoptimized: true,
+    // Removed `unoptimized: true` — Next.js image optimization is now enabled.
+    // Cloudinary images will be served as WebP with automatic resizing via /_next/image.
+    formats: ["image/webp", "image/avif"],
   },
 };
 

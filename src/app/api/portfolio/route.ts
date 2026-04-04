@@ -5,13 +5,15 @@ import { withAuth } from '@/lib/withAuth';
 
 /**
  * GET the unified portfolio data. Public.
+ * Cached at the CDN/shared-cache layer for 60s; stale responses served for
+ * up to 5 minutes while revalidation happens in the background.
  */
 export async function GET() {
   try {
     await connectDB();
     let portfolio = await Portfolio.findOne();
 
-    // If no document exists, create an initial one
+    // Seed an empty document on first run
     if (!portfolio) {
       portfolio = await Portfolio.create({
         name: 'VISHWAJIT',
@@ -20,11 +22,18 @@ export async function GET() {
         skills: [],
         experience: [],
         education: [],
-        projects: []
+        projects: [],
       });
     }
 
-    return NextResponse.json({ success: true, data: portfolio });
+    return NextResponse.json(
+      { success: true, data: portfolio },
+      {
+        headers: {
+          'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message || 'Internal Server Error' },

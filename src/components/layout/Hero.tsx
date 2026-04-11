@@ -116,7 +116,7 @@ export default function Hero({ profile }: HeroProps) {
                     <Github size={18} />
                   </motion.div>
                 </Link>
-                <Link href="https://www.linkedin.com/in/vishwajit-mavalankar-406206240/" target="_blank">
+                <Link href="https://www.linkedin.com/in/vishwajitmavalankar/" target="_blank">
                   <motion.div
                     whileHover={{ scale: 1.15, rotate: -5 }}
                     whileTap={{ scale: 0.9 }}

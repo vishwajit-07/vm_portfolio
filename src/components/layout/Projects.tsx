@@ -11,7 +11,19 @@ const FALLBACK_IMG = 'https://images.unsplash.com/photo-1639322537228-f710d84631
 // --- Modal ---
 
 function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void }) {
-  const image = proj.images?.[0] || FALLBACK_IMG;
+  const defaultImages = proj.images && proj.images.length > 0 ? proj.images : [FALLBACK_IMG];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % defaultImages.length);
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + defaultImages.length) % defaultImages.length);
+  };
 
   return (
     <motion.div
@@ -21,6 +33,51 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
       className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-10 backdrop-blur-3xl bg-background/90"
       onClick={onClose}
     >
+      <AnimatePresence>
+        {isZoomed && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="fixed inset-0 z-[10000] bg-background/95 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
+            onClick={(e) => { e.stopPropagation(); setIsZoomed(false); }}
+          >
+            <button
+              onClick={(e) => { e.stopPropagation(); setIsZoomed(false); }}
+              className="absolute top-6 right-6 z-50 p-3 rounded-full bg-card border border-border hover:bg-orange-500/10 hover:scale-110 transition-all text-foreground/50 hover:text-orange-500"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
+              <Image
+                src={defaultImages[currentIndex]}
+                alt={`${proj.title} - Zoomed`}
+                fill
+                className="object-contain"
+                sizes="100vw"
+                quality={100}
+              />
+            </div>
+            {defaultImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-6 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-background/50 border border-border backdrop-blur-md text-foreground/80 hover:text-orange-500 hover:bg-background/80 hover:scale-110 transition-all"
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full bg-background/50 border border-border backdrop-blur-md text-foreground/80 hover:text-orange-500 hover:bg-background/80 hover:scale-110 transition-all"
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </button>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         initial={{ scale: 0.9, y: 30, opacity: 0 }}
         animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -36,15 +93,52 @@ function ProjectModal({ proj, onClose }: { proj: Project; onClose: () => void })
           <X className="w-5 h-5" />
         </button>
 
-        <div className="w-full md:w-3/5 h-64 md:h-auto relative overflow-hidden">
-          <Image
-            src={image}
-            alt={proj.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 60vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        <div className="w-full md:w-3/5 h-64 md:h-auto relative overflow-hidden group bg-black/10 dark:bg-white/5 cursor-zoom-in" onClick={(e) => { e.stopPropagation(); setIsZoomed(true); }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={defaultImages[currentIndex]}
+                alt={`${proj.title} - ${currentIndex + 1}`}
+                fill
+                className="object-contain p-2"
+                sizes="(max-width: 768px) 100vw, 60vw"
+              />
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent z-10 pointer-events-none" />
+
+          {defaultImages.length > 1 && (
+            <>
+              <button
+                onClick={handlePrev}
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-1.5 md:p-2 rounded-full bg-background/50 border border-border backdrop-blur-md text-foreground/80 hover:text-orange-500 hover:bg-background/80 hover:scale-110 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-1.5 md:p-2 rounded-full bg-background/50 border border-border backdrop-blur-md text-foreground/80 hover:text-orange-500 hover:bg-background/80 hover:scale-110 transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                {defaultImages.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-orange-500 w-4' : 'bg-white/40 hover:bg-white/80 w-1.5'}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="w-full md:w-2/5 p-8 flex flex-col overflow-y-auto hide-scrollbar">
